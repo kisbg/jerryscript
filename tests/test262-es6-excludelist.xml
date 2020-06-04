@@ -122,10 +122,8 @@
   <test id="built-ins/RegExp/prototype/exec/get-sticky-coerce.js"><reason></reason></test>
   <test id="built-ins/RegExp/prototype/exec/get-sticky-err.js"><reason></reason></test>
   <test id="built-ins/RegExp/prototype/Symbol.match/builtin-coerce-global.js"><reason></reason></test>
-  <test id="built-ins/RegExp/prototype/Symbol.match/builtin-coerce-lastindex-err.js"><reason></reason></test>
   <test id="built-ins/RegExp/prototype/Symbol.match/builtin-coerce-sticky.js"><reason></reason></test>
   <test id="built-ins/RegExp/prototype/Symbol.match/builtin-failure-set-lastindex-err.js"><reason></reason></test>
-  <test id="built-ins/RegExp/prototype/Symbol.match/builtin-failure-set-lastindex.js"><reason></reason></test>
   <test id="built-ins/RegExp/prototype/Symbol.match/builtin-get-global-err.js"><reason></reason></test>
   <test id="built-ins/RegExp/prototype/Symbol.match/builtin-get-sticky-err.js"><reason></reason></test>
   <test id="built-ins/RegExp/prototype/Symbol.match/builtin-success-g-set-lastindex-err.js"><reason></reason></test>

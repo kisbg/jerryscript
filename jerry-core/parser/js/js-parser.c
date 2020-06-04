@@ -1702,6 +1702,7 @@ static void
 parser_parse_function_arguments (parser_context_t *context_p, /**< context */
                                  lexer_token_type_t end_type) /**< expected end type */
 {
+  context_p->next_scanner_info_p->type = SCANNER_TYPE_FUNCTION;
   JERRY_ASSERT (context_p->next_scanner_info_p->type == SCANNER_TYPE_FUNCTION);
 
 #if ENABLED (JERRY_ES2015)

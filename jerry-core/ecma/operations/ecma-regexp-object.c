@@ -1709,21 +1709,20 @@ ecma_regexp_exec_helper (ecma_object_t *regexp_object_p, /**< RegExp object */
 
   const lit_utf8_byte_t *input_curr_p = input_buffer_p;
   uint32_t index = 0;
+
+  ecma_string_t *lastindex_str_p = ecma_get_magic_string (LIT_MAGIC_STRING_LASTINDEX_UL);
+  ecma_value_t lastindex_value = ecma_op_object_get_own_data_prop (regexp_object_p, lastindex_str_p);
+  ecma_number_t lastindex_num;
+
+  ret_value = ecma_op_to_integer (lastindex_value, &lastindex_num);
+  if (ECMA_IS_VALUE_ERROR (ret_value))
+  {
+    goto cleanup_string;
+  }
+
+  ecma_free_value (lastindex_value);
   if (bc_p->header.status_flags & (RE_FLAG_GLOBAL | RE_FLAG_STICKY))
   {
-    ecma_string_t *lastindex_str_p = ecma_get_magic_string (LIT_MAGIC_STRING_LASTINDEX_UL);
-    ecma_value_t lastindex_value = ecma_op_object_get_own_data_prop (regexp_object_p, lastindex_str_p);
-
-    ecma_number_t lastindex_num;
-    ret_value = ecma_op_to_integer (lastindex_value, &lastindex_num);
-
-    ecma_free_value (lastindex_value);
-
-    if (ECMA_IS_VALUE_ERROR (ret_value))
-    {
-      goto cleanup_string;
-    }
-
     /* TODO: Replace with ToLength */
     if (lastindex_num < 0.0f)
     {
@@ -1767,6 +1766,21 @@ ecma_regexp_exec_helper (ecma_object_t *regexp_object_p, /**< RegExp object */
       }
     }
   }
+  else
+  {
+    ret_value = ecma_op_object_put (regexp_object_p,
+                                    lastindex_str_p,
+                                    ecma_make_integer_value (0),
+                                    true);
+
+    if (ECMA_IS_VALUE_ERROR (ret_value))
+    {
+      JERRY_ASSERT (ecma_is_value_boolean (ret_value));
+      /* lastIndex is out of bounds, the match should fail. */
+      ret_value = ECMA_VALUE_NULL;
+      goto cleanup_string;
+    }
+  }
 
   const lit_utf8_byte_t *input_end_p = input_buffer_p + input_size;
   ecma_regexp_ctx_t re_ctx;
@@ -1790,7 +1804,7 @@ ecma_regexp_exec_helper (ecma_object_t *regexp_object_p, /**< RegExp object */
     }
 
 #if ENABLED (JERRY_ES2015)
-    if (re_ctx.flags & RE_FLAG_STICKY)
+    if (re_ctx.flags & RE_FLAG_STICKY || lastindex_num > input_length)
     {
       ecma_value_t put_result = ecma_op_object_put (regexp_object_p,
                                                     ecma_get_magic_string (LIT_MAGIC_STRING_LASTINDEX_UL),
