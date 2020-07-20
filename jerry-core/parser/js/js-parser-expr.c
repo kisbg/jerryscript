@@ -2694,86 +2694,12 @@ parser_append_binary_single_assignment_token (parser_context_t *context_p, /**< 
 } /* parser_append_binary_single_assignment_token */
 
 /**
- * Check for invalid logical operator and nullish chaining
- */
-#if ENABLED (JERRY_ESNEXT)
-static void
-parser_check_invalid_logical_op (parser_context_t *context_p, /**< context */
-                                 size_t grouping_level) /**< grouping_level */
-{
-  parser_stack_iterator_t iterator;
-  parser_stack_iterator_init (context_p, &iterator);
-  bool logical_found = (grouping_level & PARSER_GROUPING_LOGICAL_FOUND) != 0;
-  bool nullish_found = false;
-
-  while (true)
-  {
-    uint8_t token = parser_stack_iterator_read_uint8 (&iterator);
-
-    if (token == LEXER_EXPRESSION_START
-        || token == LEXER_LEFT_PAREN
-        || !LEXER_IS_BINARY_OP_TOKEN (token))
-    {
-      return;
-    }
-
-    parser_stack_iterator_skip (&iterator, sizeof (uint8_t));
-
-    if (token == LEXER_ASSIGN)
-    {
-      cbc_opcode_t opcode = (cbc_opcode_t) parser_stack_iterator_read_uint8 (&iterator);
-
-      if (cbc_flags[opcode] & CBC_HAS_LITERAL_ARG)
-      {
-        parser_stack_iterator_skip (&iterator, sizeof (uint16_t));
-      }
-      token = parser_stack_iterator_read_uint8 (&iterator);
-
-      if (token == LEXER_ASSIGN_GROUP_EXPR)
-      {
-        parser_stack_iterator_skip (&iterator, sizeof (uint8_t));
-      }
-      if (token == LEXER_ASSIGN_CONST)
-      {
-        parser_stack_iterator_skip (&iterator, sizeof (uint8_t));
-      }
-    }
-    else if (token == LEXER_LOGICAL_OR || token == LEXER_LOGICAL_AND)
-    {
-      if (nullish_found)
-      {
-        parser_raise_error (context_p, PARSER_ERR_INVALID_NULLISH_COALESCING);
-      }
-
-      parser_stack_iterator_skip (&iterator, sizeof (parser_branch_t));
-      logical_found = true;
-    }
-    else if (token == LEXER_NULLISH_COALESCING)
-    {
-      if (logical_found)
-      {
-        parser_raise_error (context_p, PARSER_ERR_INVALID_NULLISH_COALESCING);
-      }
-
-      parser_stack_iterator_skip (&iterator, sizeof (parser_branch_t));
-      nullish_found = true;
-    }
-  }
-} /* parser_check_invalid_logical_op */
-
-#endif /* ENABLED (JERRY_ESNEXT) */
-
-/**
  * Append a binary token.
  */
 static void
-parser_append_binary_token (parser_context_t *context_p, /**< context */
-                            size_t grouping_level) /**< grouping_level */
+parser_append_binary_token (parser_context_t *context_p) /**< context */
 {
   JERRY_ASSERT (LEXER_IS_BINARY_OP_TOKEN (context_p->token.type));
-#if !ENABLED (JERRY_ESNEXT)
-  JERRY_UNUSED (grouping_level);
-#endif /* !ENABLED (JERRY_ESNEXT) */
   parser_push_result (context_p);
 
   if (context_p->token.type == LEXER_ASSIGN)
@@ -2829,21 +2755,16 @@ parser_append_binary_token (parser_context_t *context_p, /**< context */
     parser_emit_cbc_forward_branch (context_p, opcode, &branch);
     parser_stack_push (context_p, &branch, sizeof (parser_branch_t));
     parser_stack_push_uint8 (context_p, context_p->token.type);
-#if ENABLED (JERRY_ESNEXT)
-    parser_check_invalid_logical_op (context_p, grouping_level);
-#endif /* ENABLED (JERRY_ESNEXT) */
     return;
   }
 #if ENABLED (JERRY_ESNEXT)
   else if (context_p->token.type == LEXER_NULLISH_COALESCING)
   {
     parser_branch_t branch;
-
     uint16_t opcode = PARSER_TO_EXT_OPCODE (CBC_EXT_BRANCH_IF_NULLISH);
     parser_emit_cbc_forward_branch (context_p, opcode, &branch);
     parser_stack_push (context_p, &branch, sizeof (parser_branch_t));
     parser_stack_push_uint8 (context_p, context_p->token.type);
-    parser_check_invalid_logical_op (context_p, grouping_level);
     return;
   }
 #endif /* ENABLED (JERRY_ESNEXT) */
@@ -2990,6 +2911,11 @@ parser_process_binary_opcodes (parser_context_t *context_p, /**< context */
       parser_branch_t branch;
       parser_stack_pop (context_p, &branch, sizeof (parser_branch_t));
       parser_set_branch_to_current_position (context_p, &branch);
+      JERRY_ASSERT (grouping_level_p != NULL);
+      if (*grouping_level_p % 4 == 2)
+      {
+        parser_raise_error (context_p, PARSER_ERR_INVALID_NULLISH_COALESCING);
+      }
       continue;
     }
 #endif /* ENABLED (JERRY_ESNEXT) */
@@ -3776,7 +3702,7 @@ process_unary_expression:
     }
     else if (LEXER_IS_BINARY_OP_TOKEN (context_p->token.type))
     {
-      parser_append_binary_token (context_p, grouping_level);
+      parser_append_binary_token (context_p);
       lexer_next_token (context_p);
       continue;
     }
