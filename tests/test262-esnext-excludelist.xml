@@ -8733,8 +8733,6 @@
   <test id="built-ins/SharedArrayBuffer/proto-from-ctor-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/ctors-bigint/buffer-arg/proto-from-ctor-realm-sab.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/ctors/buffer-arg/proto-from-ctor-realm-sab.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/BigInt/detached-buffer-realm.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/Get/BigInt/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/Get/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/GetOwnProperty/BigInt/detached-buffer-realm.js"><reason></reason></test>
@@ -8786,9 +8784,6 @@
   <test id="built-ins/Atomics/wait/null-bufferdata-throws.js"><reason></reason></test>
   <test id="built-ins/Atomics/waitAsync/bigint/null-bufferdata-throws.js"><reason></reason></test>
   <test id="built-ins/Atomics/waitAsync/null-bufferdata-throws.js"><reason></reason></test>
-  <test id="built-ins/TypedArray/prototype/copyWithin/coerced-values-end-detached-prototype.js"><reason></reason></test>
-  <test id="built-ins/TypedArray/prototype/copyWithin/coerced-values-end-detached.js"><reason></reason></test>
-  <test id="built-ins/TypedArray/prototype/copyWithin/coerced-values-start-detached.js"><reason></reason></test>
   <test id="built-ins/TypedArray/prototype/every/BigInt/callbackfn-detachbuffer.js"><reason></reason></test>
   <test id="built-ins/TypedArray/prototype/every/callbackfn-detachbuffer.js"><reason></reason></test>
   <test id="built-ins/TypedArray/prototype/fill/coerced-end-detach.js"><reason></reason></test>
@@ -8827,10 +8822,8 @@
   <test id="built-ins/TypedArrayConstructors/ctors-bigint/typedarray-arg/detached-when-species-retrieved-same-type.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/ctors/typedarray-arg/detached-when-species-retrieved-different-type.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/ctors/typedarray-arg/detached-when-species-retrieved-same-type.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/BigInt/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/BigInt/detached-buffer.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/BigInt/tonumber-value-detached-buffer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/detached-buffer.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/tonumber-value-detached-buffer.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/Get/BigInt/detached-buffer-realm.js"><reason></reason></test>

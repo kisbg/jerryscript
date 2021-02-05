@@ -1577,7 +1577,10 @@ ecma_op_typedarray_define_index_prop (ecma_object_t *obj_p, /**< a TypedArray ob
                                                                                                the prop */
 {
   JERRY_ASSERT (ecma_object_is_typedarray (obj_p));
-
+  if (ecma_arraybuffer_is_detached (ecma_typedarray_get_arraybuffer (obj_p)))
+  {
+    return ecma_raise_type_error (ECMA_ERR_MSG ("ArrayBuffer has been detached"));
+  }
   uint32_t array_length = ecma_typedarray_get_length (obj_p);
 
   if ((index >= array_length)

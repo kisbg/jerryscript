@@ -127,7 +127,6 @@ ecma_builtin_typedarray_prototype_exec_routine (ecma_value_t this_arg, /**< this
                                                 typedarray_routine_mode mode) /**< mode: which routine */
 {
   JERRY_ASSERT (mode < TYPEDARRAY_ROUTINE__COUNT);
-
   ecma_typedarray_getter_fn_t typedarray_getter_cb = ecma_get_typedarray_getter_fn (info_p->id);
 
   ecma_object_t *func_object_p = ecma_get_object_from_value (cb_func_val);
@@ -145,7 +144,6 @@ ecma_builtin_typedarray_prototype_exec_routine (ecma_value_t this_arg, /**< this
 
     ecma_fast_free_value (current_index);
     ecma_fast_free_value (element);
-
     if (ECMA_IS_VALUE_ERROR (call_value))
     {
       return call_value;
@@ -169,7 +167,10 @@ ecma_builtin_typedarray_prototype_exec_routine (ecma_value_t this_arg, /**< this
 
     byte_pos += info_p->element_size;
   }
-
+  if (ecma_arraybuffer_is_detached (ecma_typedarray_get_arraybuffer (ecma_get_object_from_value(this_arg))))
+  {
+    return ecma_raise_type_error (ECMA_ERR_MSG ("ArrayBuffer has been detached"));
+  }
   if (mode == TYPEDARRAY_ROUTINE_EVERY)
   {
     ret_value = ECMA_VALUE_TRUE;
@@ -1432,6 +1433,7 @@ ecma_builtin_typedarray_prototype_copy_within (ecma_value_t this_arg, /**< this 
                                                const ecma_value_t args[], /**< arguments list */
                                                uint32_t args_number) /**< number of arguments */
 {
+
   uint32_t relative_target = 0;
   uint32_t relative_start = 0;
   uint32_t relative_end = info_p->length;
@@ -1465,7 +1467,10 @@ ecma_builtin_typedarray_prototype_copy_within (ecma_value_t this_arg, /**< this 
       }
     }
   }
-
+  if (ecma_arraybuffer_is_detached (ecma_typedarray_get_arraybuffer (ecma_get_object_from_value(this_arg))))
+  {
+    return ecma_raise_type_error (ECMA_ERR_MSG ("ArrayBuffer has been detached"));
+  }
   if (relative_target >= info_p->length || relative_start >= relative_end || relative_end == 0)
   {
     return ecma_copy_value (this_arg);
