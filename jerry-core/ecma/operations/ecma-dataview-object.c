@@ -333,9 +333,12 @@ ecma_op_dataview_get_set_view_value (ecma_value_t view, /**< the operation's 'vi
     ecma_dataview_swap_order (system_is_little_endian, is_little_endian, element_size, swap_block_p);
     return ecma_get_typedarray_element (swap_block_p, id);
   }
-
+  if (!ecma_number_is_nan (get_index) && ecma_number_is_negative (get_index) && ecma_number_is_zero (get_index))
+  {
+    get_index = 0;
+  }
   /* SetViewValue 14. */
-  ecma_value_t set_element = ecma_set_typedarray_element (block_p, value_to_set, id);
+  ecma_value_t set_element = ecma_set_typedarray_element (block_p, buffer_p, value_to_set, get_index, view_size, id);
   ecma_free_value (value_to_set);
 
   if (ECMA_IS_VALUE_ERROR (set_element))

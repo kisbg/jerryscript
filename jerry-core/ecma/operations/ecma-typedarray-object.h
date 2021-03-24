@@ -34,7 +34,10 @@ ecma_typedarray_setter_fn_t ecma_get_typedarray_setter_fn (ecma_typedarray_type_
 ecma_value_t ecma_get_typedarray_element (lit_utf8_byte_t *src_p,
                                           ecma_typedarray_type_t typedarray_id);
 ecma_value_t ecma_set_typedarray_element (lit_utf8_byte_t *dst_p,
+                                          ecma_object_t *array_buffer_p,
                                           ecma_value_t value,
+                                          ecma_number_t num,
+                                          uint32_t length_of_array,
                                           ecma_typedarray_type_t typedarray_id);
 bool ecma_typedarray_helper_is_typedarray (ecma_builtin_id_t builtin_id);
 ecma_typedarray_type_t ecma_get_typedarray_id (ecma_object_t *obj_p);

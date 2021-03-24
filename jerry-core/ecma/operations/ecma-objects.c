@@ -28,6 +28,7 @@
 #include "ecma-objects-general.h"
 #include "ecma-objects.h"
 #include "ecma-proxy-object.h"
+#include "ecma-bigint.h"
 #include "jcontext.h"
 
 #if JERRY_BUILTIN_TYPEDARRAY
@@ -1323,29 +1324,24 @@ ecma_op_object_put_with_receiver (ecma_object_t *object_p, /**< the object */
           break;
         }
 
-        uint32_t array_index = ecma_string_get_array_index (property_name_p);
-
-        if (array_index != ECMA_STRING_NOT_ARRAY_INDEX)
-        {
-          ecma_typedarray_info_t info = ecma_typedarray_get_info (object_p);
-
-          if (array_index >= info.length)
-          {
-            return ECMA_VALUE_FALSE;
-          }
-
-          uint32_t byte_pos = array_index << info.shift;
-          return ecma_set_typedarray_element (info.buffer_p + byte_pos, value, info.id);
-        }
-
         ecma_number_t num = ecma_string_to_number (property_name_p);
-        ecma_string_t *num_to_str = ecma_new_ecma_string_from_number (num);
-        bool is_same = ecma_compare_ecma_strings (property_name_p, num_to_str);
-        ecma_deref_ecma_string (num_to_str);
+        bool is_same;
+        if (!ecma_number_is_nan(num) && ecma_number_is_negative (num) && ecma_number_is_zero (num))
+        {
+          is_same = true;
+        }
+        else
+        {
+          ecma_string_t *num_to_str = ecma_new_ecma_string_from_number (num);
+          is_same = ecma_compare_ecma_strings (property_name_p, num_to_str);
+          ecma_deref_ecma_string (num_to_str);
+        }
 
         if (is_same)
         {
-          return ECMA_VALUE_FALSE;
+          ecma_typedarray_info_t info = ecma_typedarray_get_info (object_p);
+          uint32_t byte_pos = (uint32_t) num << info.shift;
+          return ecma_set_typedarray_element (info.buffer_p + byte_pos, info.array_buffer_p, value, num, info.length, info.id);
         }
       }
 #endif /* JERRY_BUILTIN_TYPEDARRAY */
