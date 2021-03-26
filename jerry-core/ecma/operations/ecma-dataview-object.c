@@ -331,7 +331,7 @@ ecma_op_dataview_get_set_view_value (ecma_value_t view, /**< the operation's 'vi
     JERRY_VLA (lit_utf8_byte_t, swap_block_p, element_size);
     memcpy (swap_block_p, block_p, element_size * sizeof (lit_utf8_byte_t));
     ecma_dataview_swap_order (system_is_little_endian, is_little_endian, element_size, swap_block_p);
-    return ecma_get_typedarray_element (swap_block_p, id);
+    return ecma_get_typedarray_element (swap_block_p, buffer_p, 0, view_size, id);
   }
   if (!ecma_number_is_nan (get_index) && ecma_number_is_negative (get_index) && ecma_number_is_zero (get_index))
   {

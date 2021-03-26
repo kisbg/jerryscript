@@ -32,6 +32,9 @@ uint8_t ecma_typedarray_helper_get_shift_size (ecma_typedarray_type_t typedarray
 ecma_typedarray_getter_fn_t ecma_get_typedarray_getter_fn (ecma_typedarray_type_t typedarray_id);
 ecma_typedarray_setter_fn_t ecma_get_typedarray_setter_fn (ecma_typedarray_type_t typedarray_id);
 ecma_value_t ecma_get_typedarray_element (lit_utf8_byte_t *src_p,
+                                        ecma_object_t *array_buffer_p,
+                                          ecma_number_t num,
+                                          uint32_t length_of_array,
                                           ecma_typedarray_type_t typedarray_id);
 ecma_value_t ecma_set_typedarray_element (lit_utf8_byte_t *dst_p,
                                           ecma_object_t *array_buffer_p,

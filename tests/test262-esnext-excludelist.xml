@@ -8297,8 +8297,6 @@
   <test id="built-ins/SharedArrayBuffer/proto-from-ctor-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/ctors-bigint/buffer-arg/proto-from-ctor-realm-sab.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/ctors/buffer-arg/proto-from-ctor-realm-sab.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Get/BigInt/detached-buffer-realm.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Get/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/GetOwnProperty/BigInt/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/GetOwnProperty/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/BigInt/detached-buffer-realm.js"><reason></reason></test>
@@ -8345,14 +8343,6 @@
   <test id="built-ins/Atomics/waitAsync/bigint/null-bufferdata-throws.js"><reason></reason></test>
   <test id="built-ins/Atomics/waitAsync/null-bufferdata-throws.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/BigInt/detached-buffer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/BigInt/tonumber-value-detached-buffer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/tonumber-value-detached-buffer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Get/BigInt/detached-buffer-realm.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Get/BigInt/detached-buffer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Get/BigInt/infinity-detached-buffer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Get/detached-buffer-realm.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Get/detached-buffer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Get/infinity-detached-buffer.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/GetOwnProperty/BigInt/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/GetOwnProperty/BigInt/detached-buffer.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/GetOwnProperty/BigInt/enumerate-detached-buffer.js"><reason></reason></test>
@@ -8361,10 +8351,8 @@
   <test id="built-ins/TypedArrayConstructors/internals/GetOwnProperty/enumerate-detached-buffer.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/BigInt/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/BigInt/detached-buffer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/HasProperty/BigInt/infinity-with-detached-buffer.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/detached-buffer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/HasProperty/infinity-with-detached-buffer.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/BigInt/abrupt-from-ordinary-has-parent-hasproperty.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/BigInt/inherited-property.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/BigInt/key-is-greater-than-last-index.js"><reason></reason></test>
@@ -8377,11 +8365,7 @@
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/key-is-lower-than-zero.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/key-is-minus-zero.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/HasProperty/key-is-not-integer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Set/BigInt/tonumber-value-detached-buffer.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Set/tonumber-value-detached-buffer.js"><reason></reason></test>
   <!-- END - Missing test262 support in JerryScript REPL - missing $262.detachArrayBuffer function -->
-  <test id="built-ins/TypedArrayConstructors/internals/Get/BigInt/key-is-not-minus-zero.js"><reason></reason></test>
-  <test id="built-ins/TypedArrayConstructors/internals/Get/key-is-not-minus-zero.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/detached-buffer.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/BigInt/detached-buffer-realm.js"><reason></reason></test>
   <test id="built-ins/TypedArrayConstructors/internals/DefineOwnProperty/detached-buffer-realm.js"><reason></reason></test>

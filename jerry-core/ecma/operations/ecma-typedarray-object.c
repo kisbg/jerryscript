@@ -622,8 +622,23 @@ ecma_get_typedarray_getter_fn (ecma_typedarray_type_t typedarray_id)
  */
 extern inline ecma_value_t JERRY_ATTR_ALWAYS_INLINE
 ecma_get_typedarray_element (lit_utf8_byte_t *src_p,
+                             ecma_object_t *array_buffer_p,
+                             ecma_number_t num,
+                             uint32_t length_of_array,
                              ecma_typedarray_type_t typedarray_id)
 {
+  if (ecma_arraybuffer_is_detached (array_buffer_p))
+  {
+    return ecma_raise_type_error (ECMA_ERR_MSG ("ArrayBuffer has been detached"));
+  }
+
+  if (!ecma_op_is_integer (num)
+      || num >= length_of_array
+      || num < 0
+      || (ecma_number_is_negative (num) && ecma_number_is_zero (num)))
+  {
+    return ECMA_VALUE_UNDEFINED;
+  }
   return ecma_typedarray_getters[typedarray_id](src_p);
 } /* ecma_get_typedarray_element */
 
@@ -676,7 +691,10 @@ ecma_set_typedarray_element (lit_utf8_byte_t *dst_p,
     return ecma_raise_type_error (ECMA_ERR_MSG ("ArrayBuffer has been detached"));
   }
 
-  if (!ecma_op_is_integer (num) || num >= length_of_array || num < 0 || (ecma_number_is_negative (num) && ecma_number_is_zero (num)))
+  if (!ecma_op_is_integer (num)
+      || num >= length_of_array
+      || num < 0
+      || (ecma_number_is_negative (num) && ecma_number_is_zero (num)))
   {
     ecma_free_value (to_num);
     return ECMA_VALUE_FALSE;
@@ -1500,7 +1518,8 @@ ecma_typedarray_get_length (ecma_object_t *typedarray_p) /**< the pointer to the
   if (ext_object_p->u.pseudo_array.type == ECMA_PSEUDO_ARRAY_TYPEDARRAY)
   {
     ecma_object_t *arraybuffer_p = ecma_get_object_from_value (ext_object_p->u.pseudo_array.u2.arraybuffer);
-    uint32_t buffer_length = ecma_arraybuffer_get_length (arraybuffer_p);
+    ecma_extended_object_t *arraybuffer_object_p = (ecma_extended_object_t *) arraybuffer_p;
+    uint32_t buffer_length = arraybuffer_object_p->u.class_prop.u.length;
     uint8_t shift = ecma_typedarray_get_element_size_shift (typedarray_p);
 
     return buffer_length >> shift;
@@ -1837,7 +1856,6 @@ ecma_op_typedarray_define_own_property (ecma_object_t *obj_p, /**< TypedArray ob
       ecma_deref_ecma_string (num_to_str);
     }
 
-
     if (is_same)
     {
       if ((property_desc_p->flags & (ECMA_PROP_IS_GET_DEFINED | ECMA_PROP_IS_SET_DEFINED))
@@ -1846,28 +1864,29 @@ ecma_op_typedarray_define_own_property (ecma_object_t *obj_p, /**< TypedArray ob
           || ((property_desc_p->flags & ECMA_PROP_IS_ENUMERABLE_DEFINED)
               && !(property_desc_p->flags & ECMA_PROP_IS_ENUMERABLE))
           || ((property_desc_p->flags & ECMA_PROP_IS_WRITABLE_DEFINED)
-              && !(property_desc_p->flags & ECMA_PROP_IS_WRITABLE))
-          ||  !ecma_op_is_integer (num))
+              && !(property_desc_p->flags & ECMA_PROP_IS_WRITABLE)))
       {
         return ecma_raise_property_redefinition (prop_name_p, property_desc_p->flags);
       }
 
       ecma_typedarray_info_t info = ecma_typedarray_get_info (obj_p);
 
-      if (!ecma_op_is_integer (num) || num >= info.length || num < 0 || (ecma_number_is_negative (num) && ecma_number_is_zero (num)))
+      if (!ecma_op_is_integer (num)
+          || num >= info.length
+          || num < 0
+          || (ecma_number_is_negative (num) && ecma_number_is_zero (num)))
       {
         return ECMA_VALUE_FALSE;
       }
 
-      if (ecma_arraybuffer_is_detached (info.array_buffer_p))
-      {
-        return ecma_raise_type_error (ECMA_ERR_MSG ("ArrayBuffer has been detached"));
-      }
-
       if (property_desc_p->flags & ECMA_PROP_IS_VALUE_DEFINED)
       {
+
         lit_utf8_byte_t *src_buffer = info.buffer_p + ((uint32_t) num << info.shift);
-        ecma_value_t set_element = ecma_set_typedarray_element (src_buffer, info.array_buffer_p, property_desc_p->value, num, info.length, info.id);
+        ecma_value_t set_element = ecma_set_typedarray_element (src_buffer,
+                                                                info.array_buffer_p,
+                                                                property_desc_p->value,
+                                                                num, info.length, info.id);
 
         if (ECMA_IS_VALUE_ERROR (set_element))
         {

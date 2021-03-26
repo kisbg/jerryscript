@@ -1631,7 +1631,10 @@ static ecma_value_t
 ecma_builtin_typedarray_prototype_to_locale_string_helper (ecma_typedarray_info_t *info_p, /**< object info */
                                                            uint32_t index) /** array index */
 {
-  ecma_value_t element_value = ecma_get_typedarray_element (info_p->buffer_p + index, info_p->id);
+  ecma_value_t element_value = ecma_get_typedarray_element (info_p->buffer_p + index,
+                                                            info_p->array_buffer_p,
+                                                            1, info_p->length, info_p->id);
+
   ecma_value_t call_value = ecma_op_invoke_by_magic_id (element_value, LIT_MAGIC_STRING_TO_LOCALE_STRING_UL, NULL, 0);
 
   ecma_free_value (element_value);
@@ -1923,6 +1926,13 @@ ecma_builtin_typedarray_prototype_dispatch_routine (uint8_t builtin_routine_id, 
     }
     case ECMA_TYPEDARRAY_PROTOTYPE_ROUTINE_BYTELENGTH_GETTER:
     {
+      ecma_object_t *buffer_p = ecma_typedarray_get_arraybuffer (typedarray_p);
+
+      if (ecma_arraybuffer_is_detached (buffer_p))
+      {
+        return ecma_make_uint32_value (0);
+      }
+
       uint32_t length = ecma_typedarray_get_length (typedarray_p);
       uint8_t shift = ecma_typedarray_get_element_size_shift (typedarray_p);
       return ecma_make_uint32_value (length << shift);
@@ -1933,6 +1943,13 @@ ecma_builtin_typedarray_prototype_dispatch_routine (uint8_t builtin_routine_id, 
     }
     case ECMA_TYPEDARRAY_PROTOTYPE_ROUTINE_LENGTH_GETTER:
     {
+      ecma_object_t *buffer_p = ecma_typedarray_get_arraybuffer (typedarray_p);
+
+      if (ecma_arraybuffer_is_detached (buffer_p))
+      {
+        return ecma_make_uint32_value (0);
+      }
+
       return ecma_make_uint32_value (ecma_typedarray_get_length (typedarray_p));
     }
     case ECMA_TYPEDARRAY_PROTOTYPE_ROUTINE_TO_STRING_TAG_GETTER:
